@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +18,24 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+// Login
+Route::get('/anm/login', [LoginController::class, 'index']);
+Route::post('/anm/login', [LoginController::class, 'authenticate']);
+
+// Register
+Route::post('/anm/register', [UserController::class, 'store']);
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/dashboard', [UserController::class, 'index']);
+
+    // Logout
+    Route::post('/anm/logout', [LoginController::class, 'logout']);
+    // List route group Administrator
+    Route::middleware(['ceklogin:Admin'])->group(function () {
+
+        Route::get('/anm/dashboard', [DashboardController::class, 'index']);
+    });
 });
