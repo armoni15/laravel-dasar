@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,11 +22,13 @@ Route::get('/', function () {
 });
 
 // Login
-Route::get('/anm/login', [LoginController::class, 'index']);
+Route::get('/anm/login', [LoginController::class, 'index'])->name('ANMLogin');
 Route::post('/anm/login', [LoginController::class, 'authenticate']);
 
-// Register
-Route::post('/anm/register', [UserController::class, 'store']);
+// Register user
+Route::post('/anm/register', [RegisterController::class, 'store']);
+// Check username user
+Route::get('/anm/register/checkusername', [RegisterController::class, 'checkUsername']);
 
 Route::middleware(['auth'])->group(function () {
 
@@ -33,6 +36,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Logout
     Route::post('/anm/logout', [LoginController::class, 'logout']);
+
     // List route group Administrator
     Route::middleware(['ceklogin:Admin'])->group(function () {
 

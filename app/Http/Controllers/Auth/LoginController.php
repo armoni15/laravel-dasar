@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Encript;
+use App\CaesarCipher;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,12 +23,16 @@ class LoginController extends Controller
 
     public function authenticate(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
+        $request->validate([
+            'user' => 'required',
             'password' => 'required',
         ]);
 
-        $credentials['password'] = Encript::enkripsi($request->password);
+        $loginType = filter_var($request->user, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        $credentials[$loginType] = $request->user;
+
+        $credentials['password'] = CaesarCipher::enkripsi($request->password);
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
@@ -40,7 +44,8 @@ class LoginController extends Controller
             }
         }
 
-        return back()->with('loginError', 'These credentials do not match our records!');
+        return back()->withInput()->with('loginError', 'Login failed!');
+        // return back()->with('loginError', 'Login failed!');
     }
 
     public function logout(Request $request)

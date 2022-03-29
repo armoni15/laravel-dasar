@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
+
   <title>{{ config('app.name', 'Laravel') }} | Login</title>
 
   <!-- Google Font: Source Sans Pro -->
@@ -15,6 +16,8 @@
   <link rel="stylesheet" href="/assets/admin/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
   <!-- Toastr -->
   <link rel="stylesheet" href="/assets/admin/plugins/toastr/toastr.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="/assets/admin/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="/assets/admin/dist/css/adminlte.min.css">
 
@@ -32,16 +35,26 @@
 
         <form action="/anm/login" method="POST">
           @csrf
-          @error('email')
+
+          <div class="input-group">
+            <input type="text" name="user" class="form-control @error('user') is-invalid @enderror" placeholder="Username or email" value="{{ old('user') }}" required autofocus>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-user"></span>
+              </div>
+            </div>
+          </div>
+          @error('user')
           <small class="text-danger">
             {{ $message }}
           </small>
           @enderror
-          <div class="input-group mb-3">
-            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+
+          <div class="input-group mt-3 mb-3">
+            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password" required>
             <div class="input-group-append">
               <div class="input-group-text">
-                <span class="fas fa-envelope"></span>
+                <span class="fas fa-lock"></span>
               </div>
             </div>
           </div>
@@ -50,14 +63,7 @@
             {{ $message }}
           </small>
           @enderror
-          <div class="input-group mb-3">
-            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password" required autocomplete="current-password">
-            <div class="input-group-append">
-              <div class="input-group-text">
-                <span class="fas fa-lock"></span>
-              </div>
-            </div>
-          </div>
+
           <div class="row">
             <!-- /.col -->
             <div class="col-12">
@@ -67,9 +73,9 @@
           </div>
         </form>
 
-        <div class="social-auth-links text-center mb-3">
-          Back to <a href="/">Home</a> -or-
-          <a href="#" type="button" class="text-primary">Register now?</a>
+        <div class="social-auth-links text-center mt-3 mb-2">
+          Back to <a href="/">home</a> or
+          <a type="button" class="text-primary" data-toggle="modal" data-target="#modalRegister">register now?</a>
         </div>
       </div>
       <!-- /.login-card-body -->
@@ -88,19 +94,13 @@
   <!-- AdminLTE App -->
   <script src="/assets/admin/dist/js/adminlte.min.js"></script>
 
+  @include('auth.modalRegister')
+
   @if (session('loginError'))
-  <input type="hidden" id="loginError" value="{{ session('loginError') }}">
   <script>
     // Load alerts
-    var Toast = Swal.mixin({
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3000
-    });
-
     $(document).ready(function() {
-      var logError = $('#loginError').val();
+      var logError = "{{ session('loginError') }}";
       toastr.error(logError);
     });
   </script>
