@@ -20,7 +20,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="/anm/company" class="nav-link {{ Request::is('anm/company*') ? 'active' : '' }}">
+          <a href="/anm/companies" class="nav-link {{ Request::is('anm/companies*') ? 'active' : '' }}">
             <i class="nav-icon fas fa-building"></i>
             <p>
               Companies
@@ -28,7 +28,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="/anm/employee" class="nav-link {{ Request::is('employee*') ? 'active' : '' }}">
+          <a href="/anm/employees" class="nav-link {{ Request::is('employees*') ? 'active' : '' }}">
             <i class="nav-icon fas fa-users"></i>
             <p>
               Employees

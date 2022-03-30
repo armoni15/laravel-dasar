@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CompanyController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -41,5 +42,10 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['ceklogin:Admin'])->group(function () {
 
         Route::get('/anm/dashboard', [DashboardController::class, 'index']);
+
+        // Ajax slug companies
+        Route::get('/anm/companies/checkslug', [CompanyController::class, 'checkslug']);
+        // List route companies
+        Route::resource('anm/companies', CompanyController::class);
     });
 });
