@@ -45,6 +45,8 @@ Route::middleware(['auth'])->group(function () {
 
         // Ajax slug companies
         Route::get('/anm/companies/checkslug', [CompanyController::class, 'checkslug']);
+        // Ajax fetch data companies
+        Route::get('/anm/companies/fetch', [CompanyController::class, 'fetchData']);
         // List route companies
         Route::resource('anm/companies', CompanyController::class);
     });

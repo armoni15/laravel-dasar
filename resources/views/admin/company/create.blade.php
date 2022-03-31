@@ -39,7 +39,7 @@
               @csrf
               <div class="card-body">
                 <div class="row justify-content-evenly">
-                  <div class="col-6">
+                  <div class="col-md-6">
                     <div class="form-group">
                       <label for="inputName">Name <span style="color: red;">*</span></label>
                       <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="inputName" value="{{ old('name') }}" required>
@@ -69,7 +69,7 @@
                       @enderror
                     </div>
                   </div>
-                  <div class="col-5">
+                  <div class="col-md-5">
                     <div class="form-group">
                       <label for="inputLogo">Logo <span style="color: red;">*</span></label>
                       <div class="input-group">

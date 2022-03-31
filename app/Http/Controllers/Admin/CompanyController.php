@@ -18,7 +18,13 @@ class CompanyController extends Controller
 
     public function index()
     {
-        $companies = DB::table('companies')->latest()->paginate(5);
+        if (session('rowCompanies')) {
+            $row = session('rowCompanies');
+        } else {
+            $row = 5;
+        }
+
+        $companies = DB::table('companies')->latest()->paginate($row);
 
         return view('admin.company.list', [
             'companies' => $companies
@@ -135,6 +141,22 @@ class CompanyController extends Controller
             $slug = SlugService::createSlug(Company::class, 'slug', $request->name);
 
             return response()->json(['slug' => $slug]);
+        }
+    }
+
+    public function fetchData(Request $request)
+    {
+        if ($request->ajax()) {
+            $companies = DB::table('companies')
+                ->where('name', 'like', '%' . $request->search . '%')
+                ->orWhere('email', 'like', '%' . $request->search . '%')
+                ->orWhere('website', 'like', '%' . $request->search . '%')
+                ->latest()
+                ->paginate($request->row);
+
+            session(['rowCompanies' => $request->row]);
+
+            return view('admin.company.listAjax', ['companies' => $companies])->render();
         }
     }
 }

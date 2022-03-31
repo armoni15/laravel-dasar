@@ -37,25 +37,41 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
-          <div class="card card-info card-outline">
+          <div class="card card-lightblue card-outline">
             <div class="card-header">
-              <h3 class="card-title mt-1"><i class="fas fa-list"></i>&nbsp; List Data Companies</h3>&nbsp;
-              &nbsp;<a href="/anm/companies/create" class="btn btn-primary btn-sm" title="Create"><i class="fas fa-plus"></i> Create</a>
+              <div class="row justify-content-between">
+                <div class="col-md-6 mt-1 mb-1">
+                  <div class="card-tools float-left">
+                    <div class="input-group input-group-sm" style="width: 52px;">
+                      <select class="custom-select" id="selectRows">
+                        <option @if (session('rowCompanies') == 5) selected @endif value="5">5</option>
+                        <option @if (session('rowCompanies') == 10) selected @endif value="10">10</option>
+                        <option @if (session('rowCompanies') == 15) selected @endif value="15">15</option>
+                        <option @if (session('rowCompanies') == 20) selected @endif value="20">20</option>
+                      </select>
+                    </div>
+                  </div>
+                  <h3 class="card-title mt-1">&nbsp; List Data Companies</h3>&nbsp;
+                  &nbsp;<a href="/anm/companies/create" class="btn btn-primary btn-sm" title="Create"><i class="fas fa-plus"></i> Create</a>
+                </div>
 
-              <div class="card-tools mt-1">
-                <div class="input-group input-group-sm" style="width: 150px;">
-                  <input type="text" name="search" id="ajaxSearch" class="form-control float-right" placeholder="Search">
-
-                  <div class="input-group-append">
-                    <button type="submit" class="btn btn-default">
-                      <i class="fas fa-search"></i>
-                    </button>
+                <div class="col-md-3 mt-1">
+                  <div class="card-tools float-right">
+                    <div class="input-group input-group-sm" style="width: 180px;">
+                      <input type="text" name="search" id="ajaxSearch" class="form-control float-right" placeholder="Search">
+                      <div class="input-group-append">
+                        <span class="input-group-text">
+                          <i class="fas fa-search"></i>
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
+
             </div>
             <!-- /.card-header -->
-            <div class="card-body table-responsive p-0">
+            <div id="dataList" class="card-body table-responsive p-0">
               <table class="table table-hover text-nowrap">
                 <thead>
                   <tr>
@@ -63,10 +79,10 @@
                     <th>Company Name</th>
                     <th>Email</th>
                     <th>Logo</th>
-                    <th><i class="nav-icon fas fa-gear"></i> Action</th>
+                    <th><i class="bi bi-gear-wide-connected"></i> Action</th>
                   </tr>
                 </thead>
-                <tbody id="dataList">
+                <tbody>
 
                   @if (count($companies) > 0)
                   @foreach ($companies as $company)
@@ -104,6 +120,7 @@
                 </div>
               </div>
             </div>
+            <input type="hidden" id="ajaxPage" name="ajax_page" value="1">
             <!-- /.card-body -->
           </div>
           <!-- /.card -->
@@ -136,11 +153,48 @@
         }
       });
 
-      // Untuk mengisi input id di modal 
+      // Untuk mengisi ref slug di modal delete
       $(document).on('click', '#btnDelete', function(e) {
         e.preventDefault();
         var del_slug = $(this).val();
         $('#formDelete').attr('action', '/anm/companies/' + del_slug);
+      });
+
+      function fetchData(page, row, search) {
+        $.ajax({
+          url: "/anm/companies/fetch?page=" + page + "&row=" + row + "&search=" + search,
+          success: function(data) {
+            $('#dataList').html('');
+            $('#dataList').html(data);
+          }
+        })
+      }
+
+      $(document).on('keyup', '#ajaxSearch', function(e) {
+        e.preventDefault();
+        var search = $('#ajaxSearch').val();
+        var page = $('#ajaxPage').val();
+        var row = $('#selectRows').val();
+        fetchData(page, row, search);
+      });
+
+      $(document).on('change', '#selectRows', function(e) {
+        e.preventDefault();
+        var search = $('#ajaxSearch').val();
+        var page = $('#ajaxPage').val();
+        var row = $('#selectRows').val();
+        fetchData(page, row, search);
+      });
+
+      $(document).on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        var search = $('#ajaxSearch').val();
+        var row = $('#selectRows').val();
+        var page = $(this).attr('href').split('page=')[1];
+        $('#ajaxPage').val(page);
+        $('li').removeClass('active');
+        $(this).parent().addClass('active');
+        fetchData(page, row, search);
       });
 
     });

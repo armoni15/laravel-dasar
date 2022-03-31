@@ -29,7 +29,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-10">
-          <div class="card card-primary card-outline">
+          <div class="card card-warning card-outline">
             <div class="card-header">
               <h3 class="card-title"><i class="nav-icon fas fa-list"></i>&nbsp; Form Edit</h3>
             </div>
@@ -40,7 +40,7 @@
               @csrf
               <div class="card-body">
                 <div class="row justify-content-evenly">
-                  <div class="col-6">
+                  <div class="col-md-6">
                     <div class="form-group">
                       <label for="editName">Name <span style="color: red;">*</span></label>
                       <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="editName" value="{{ old('name', $company->name) }}" required>
@@ -70,7 +70,7 @@
                       @enderror
                     </div>
                   </div>
-                  <div class="col-5">
+                  <div class="col-md-5">
                     <div class="form-group">
                       <label for="editLogo">Logo</label>
                       <div class="input-group">
@@ -102,8 +102,8 @@
 
               <div class="card-footer">
                 <div class="float-right">
-                  <a href="/anm/companies" class="btn btn-danger">Cancel</a>
-                  <button type="submit" class="btn btn-primary">Update</button>
+                  <a href="/anm/companies" class="btn btn-primary">Cancel</a>
+                  <button type="submit" class="btn btn-warning">Update</button>
                 </div>
               </div>
             </form>
